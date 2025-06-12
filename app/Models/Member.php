@@ -3,6 +3,7 @@
 namespace app\Models;
 
 use database\Database;
+use PDO;
 
 class Member
 {
@@ -34,5 +35,12 @@ class Member
     {
         $result = $this->db->query("SELECT * FROM members");
         return $result->fetchAll();
+    }
+
+    public function count(): int
+    {
+        $result = $this->db->query("SELECT COUNT(*) as count FROM members");
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        return (int)$row['count'];
     }
 }

@@ -1,0 +1,51 @@
+<?php $_shouldextend[1]=1; ?>
+
+<?php $this->startSection('content'); ?>
+
+ <div class="max-w-4xl mx-auto mt-10 p-6 bg-white shadow rounded">
+ <h2 class="text-xl text-center font-semibold mb-4">All Members</h2>
+
+ <table class="w-full border border-gray-300 rounded overflow-hidden">
+ <thead class="bg-gray-100">
+ <tr>
+ <th class="p-3 text-left border-b">Photo</th>
+ <th class="p-3 text-left border-b">Full Name</th>
+ <th class="p-3 text-left border-b">Report Subject</th>
+ <th class="p-3 text-left border-b">Email</th>
+ </tr>
+ </thead>
+ <tbody id="members-table-body">
+
+ </tbody>
+ </table>
+ </div>
+ <script>
+ document.addEventListener("DOMContentLoaded", async () => {
+ try {
+ const res = await fetch("/api/members");
+ const members = await res.json();
+
+ const tbody = document.getElementById("members-table-body");
+
+ members.forEach(member => {
+ const tr = document.createElement("tr");
+ tr.classList.add("border-b");
+
+ tr.innerHTML = `
+ <td class="p-3">
+ <img src="${member.photo}" alt="${member.full_name}" class="h-12 w-12 object-cover rounded-full">
+ </td>
+ <td class="p-3">${member.full_name}</td>
+ <td class="p-3">${member.report_subject}</td>
+ <td class="p-3">${member.email}</td>
+ `;
+
+ tbody.appendChild(tr);
+ });
+ } catch (err) {
+ console.error("Ошибка загрузки участников: ", err);
+ }
+ })
+ </script>
+<?php $this->stopSection(); ?>
+<?php if (isset($_shouldextend[1])) { echo $this->runChild('layout'); } ?>
