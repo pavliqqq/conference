@@ -2,13 +2,17 @@
 
 namespace core;
 
-use app\Models\Member;
+use app\Services\MemberService;
 use DateTime;
 
 class Validator
 {
-    private Member $member;
+    private MemberService $service;
 
+    public function __construct()
+    {
+        $this->service = new MemberService();
+    }
     private const COUNTRY_CODES_PATH = __DIR__ . '/../resources/data/iso2_codes.json';
 
     private const NAME_MIN = 2;
@@ -22,10 +26,6 @@ class Validator
 
     private const PHOTO_MAX_SIZE = 500 * 1024;
     private const PHOTO_ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
-    public function __construct()
-    {
-        $this->member = new Member();
-    }
 
     public function validateFirstStep(array $data): array
     {
@@ -178,15 +178,10 @@ class Validator
             return 'Invalid email format';
         }
 
-        if (!$this->isEmailUnique($value)) {
+        if (!$this->service->isEmailUnique($value)) {
             return 'This email is already registered';
         }
         return null;
-    }
-
-    private function isEmailUnique(string $email): bool
-    {
-        return $this->member->emailCheck($email) === 0;
     }
 
 
