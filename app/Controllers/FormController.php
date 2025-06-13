@@ -3,21 +3,32 @@
 namespace app\Controllers;
 
 use app\Models\Member;
+use app\Services\FileUploader;
 use core\View;
+use core\Validator;
 
 class FormController
 {
     private Member $member;
+    private Validator $validator;
 
     public function __construct()
     {
         $this->member = new Member();
+        $this->validator = new Validator();
     }
 
 
     public function wizardForm()
     {
-        View::render('wizard_form');
+        $config = require __DIR__ . '/../../config/config.php';
+
+        $shareUrl = $config['app_url'] . $config['share']['path'];
+        $tweetText = $config['share']['tweetText'];
+        $facebookUrl = 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode($shareUrl);
+        $twitterUrl = 'https://twitter.com/intent/tweet?text=' . urlencode($tweetText) . '&url=' . urlencode($shareUrl);
+
+        View::render('wizard_form', ['facebookUrl' => $facebookUrl, 'twitterUrl' => $twitterUrl]);
     }
 
     public function getAllMembers()
@@ -36,7 +47,6 @@ class FormController
                 'email' => $member['email']
             ];
         }
-
         View::render('all_members', ['members' => $result]);
     }
 
@@ -54,7 +64,15 @@ class FormController
             'email' => $_POST['email'] ?? '',
         ];
 
-        //Добавить валидацию
+        $errors = $this->validator->validateFirstStep($data);
+
+        if (!empty($errors)) {
+            echo json_encode([
+                'success' => false,
+                'errors' => $errors
+            ]);
+            return;
+        }
 
         $id = $this->member->create($data);
 
@@ -65,33 +83,40 @@ class FormController
     {
         $this->check_request_method('POST');
 
-        $id = (int)$_POST['id'] ?? '';
+        $defaultPhotoPath = '/uploads/default_photo.png';
+
+        $id = (int)$_POST['id'] ?? 0;
+
+        if (!$this->member->exists($id)) {
+            echo json_encode(['success' => false, 'error' => 'Invalid member ID']);
+            return;
+        }
 
         $data = [
             'company' => $_POST['company'] ?? '',
             'position' => $_POST['position'] ?? '',
             'about_me' => $_POST['about_me'] ?? '',
-            'photo' => ''
+            'photo' => $_FILES['photo'] ?? null
         ];
 
-        //отрефакторить код файла: добавить проверку на расширение, на размер
-        if (isset($_FILES['photo']) && $_FILES['photo']['error'] == 0) {
+        $errors = $this->validator->validateSecondStep($data);
 
-            $ext = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
-            $fileName = uniqid('photo_', true) . '.' . $ext;
-
-            $targetPath = __DIR__ . '/../../public/uploads/' . $fileName;
-
-            if (move_uploaded_file($_FILES['photo']['tmp_name'], $targetPath)) {
-                $data['photo'] = '/uploads/' . $fileName;
-            }
+        if (!empty($errors)) {
+            echo json_encode([
+                'success' => false,
+                'errors' => $errors
+            ]);
+            return;
         }
-        //Добавить валидацию
+
+        $fileUploader = new FileUploader();
+        $data['photo'] = $fileUploader->upload($data['photo']) ?? $defaultPhotoPath;
+
 
         $this->member->update($data, $id);
         $count = $this->member->count();
 
-        echo json_encode(['count' => $count]);
+        echo json_encode(['success' => true, 'count' => $count]);
     }
 
     public function check_request_method(string $method)
@@ -102,4 +127,5 @@ class FormController
             exit;
         }
     }
+
 }

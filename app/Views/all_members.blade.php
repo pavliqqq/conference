@@ -15,36 +15,18 @@
             </tr>
             </thead>
             <tbody id="members-table-body">
-
+            @foreach($members as $member)
+                <tr class="border-b">
+                    <td class="p-3">
+                        <img src="{{ $member['photo'] }}" alt="{{ $member['full_name'] }}"
+                             class="h-12 w-12 object-cover rounded-full">
+                    </td>
+                    <td class="p-3">{{ $member['full_name'] }}</td>
+                    <td class="p-3">{{ $member['report_subject'] }}</td>
+                    <td class="p-3">{{ $member['email'] }}</td>
+                </tr>
+            @endforeach
             </tbody>
         </table>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            try {
-                const res = await fetch("/api/members");
-                const members = await res.json();
-
-                const tbody = document.getElementById("members-table-body");
-
-                members.forEach(member => {
-                    const tr = document.createElement("tr");
-                    tr.classList.add("border-b");
-
-                    tr.innerHTML = `
-                    <td class="p-3">
-                        <img src="${member.photo}" alt="${member.full_name}" class="h-12 w-12 object-cover rounded-full">
-                    </td>
-                    <td class="p-3">${member.full_name}</td>
-                    <td class="p-3">${member.report_subject}</td>
-                    <td class="p-3">${member.email}</td>
-                `;
-
-                    tbody.appendChild(tr);
-                });
-            } catch (err) {
-                console.error("Ошибка загрузки участников: ", err);
-            }
-        })
-    </script>
 @endsection

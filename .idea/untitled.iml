@@ -48,5 +48,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="leaflet" level="application" />
+    <orderEntry type="library" name="intl-tel-input" level="application" />
+    <orderEntry type="library" name="inputmask" level="application" />
   </component>
 </module>

@@ -43,4 +43,22 @@ class Member
         $row = $result->fetch(PDO::FETCH_ASSOC);
         return (int)$row['count'];
     }
+
+    public function emailCheck(string $email): int
+    {
+        $sql = ("SELECT COUNT(*) FROM members WHERE email = ?");
+        $result = $this->db->query($sql, [$email]);
+        $count = $result->fetchColumn();
+
+        return $count;
+    }
+
+    public function exists(int $id): bool
+    {
+        $sql = ("SELECT 1 FROM members WHERE id = ?");
+        $result = $this->db->query($sql, [$id]);
+
+
+        return (bool) $result->fetchColumn();
+    }
 }

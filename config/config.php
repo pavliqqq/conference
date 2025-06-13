@@ -5,6 +5,10 @@ return [
         'dbname' => 'conference',
         'user' => 'root',
         'password' => ''
-    ]
-    //Добавить адрес и текст шарилки
+    ],
+    'app_url' => 'http://localhost:8000',
+    'share' => [
+        'path' => '/wizard_form',
+        'tweetText' => 'Check out this Meetup with SoCal AngularJS!',
+    ],
 ];
