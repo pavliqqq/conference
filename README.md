@@ -17,6 +17,11 @@ git clone https://github.com/pavliqqq/conference.git
 cd conference
 ```
 
+### 2. Install Dependencies
+```bash
+composer install
+```
+
 ### 2. Database Setup
 
 1. Create a MySQL database:
