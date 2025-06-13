@@ -13,7 +13,7 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://https://github.com/pavliqqq/conference.git
+git clone https://github.com/pavliqqq/conference.git
 cd conference
 ```
 
