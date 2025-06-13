@@ -22,7 +22,7 @@ cd conference
 composer install
 ```
 
-### 2. Database Setup
+### 3. Database Setup
 
 1. Create a MySQL database:
 
@@ -35,7 +35,7 @@ CREATE DATABASE conference CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 mysql -u root -p conference < database/dump.sql
 ```
 
-### 3. Start Local Server
+### 4. Start Local Server
 
 ```bash
 php -S localhost:8000 -t public
