@@ -23,7 +23,11 @@
                     </td>
                     <td class="p-3">{{ $member['full_name'] }}</td>
                     <td class="p-3">{{ $member['report_subject'] }}</td>
-                    <td class="p-3">{{ $member['email'] }}</td>
+                    <td class="p-3">
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $member['email'] }}" target="_blank" class="text-blue-600 hover:underline">
+                            {{ $member['email'] }}
+                        </a>
+                    </td>
                 </tr>
             @endforeach
             </tbody>

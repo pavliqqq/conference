@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => '__root__',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => 'db529cde1fe849a55dc554cd59747e0e25425488',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         '__root__' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'db529cde1fe849a55dc554cd59747e0e25425488',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -55,6 +55,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'eftec/bladeone' => array(
+            'pretty_version' => '4.18',
+            'version' => '4.18.0.0',
+            'reference' => 'fb51dcd21ba6c998b96d26ac5babfca1bd05acdf',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../eftec/bladeone',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'evenement/evenement' => array(
             'pretty_version' => 'v3.0.2',
             'version' => '3.0.2.0',
@@ -82,6 +91,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'graham-campbell/result-type' => array(
+            'pretty_version' => 'v1.1.3',
+            'version' => '1.1.3.0',
+            'reference' => '3ba905c11371512af9d9bdd27d99b782216b6945',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../graham-campbell/result-type',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'pdepend/pdepend' => array(
             'pretty_version' => '2.16.2',
             'version' => '2.16.2.0',
@@ -99,6 +117,15 @@
             'install_path' => __DIR__ . '/../phpmd/phpmd',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'phpoption/phpoption' => array(
+            'pretty_version' => '1.9.3',
+            'version' => '1.9.3.0',
+            'reference' => 'e3fac8b24f56113f7cb96af14958c0dd16330f54',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpoption/phpoption',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
             'pretty_version' => '2.1.17',
@@ -329,7 +356,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-ctype',
             'aliases' => array(),
-            'dev_requirement' => true,
+            'dev_requirement' => false,
         ),
         'symfony/polyfill-intl-grapheme' => array(
             'pretty_version' => 'v1.32.0',
@@ -356,7 +383,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
             'aliases' => array(),
-            'dev_requirement' => true,
+            'dev_requirement' => false,
         ),
         'symfony/polyfill-php80' => array(
             'pretty_version' => 'v1.32.0',
@@ -365,7 +392,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-php80',
             'aliases' => array(),
-            'dev_requirement' => true,
+            'dev_requirement' => false,
         ),
         'symfony/polyfill-php81' => array(
             'pretty_version' => 'v1.32.0',
@@ -426,6 +453,15 @@
             'install_path' => __DIR__ . '/../symfony/var-exporter',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'vlucas/phpdotenv' => array(
+            'pretty_version' => 'v5.6.2',
+            'version' => '5.6.2.0',
+            'reference' => '24ac4c74f91ee2c193fa1aaa5c249cb0822809af',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../vlucas/phpdotenv',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
     ),
 );

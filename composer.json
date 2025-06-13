@@ -2,7 +2,8 @@
   "require": {
     "ext-pdo": "*",
     "eftec/bladeone": "^4.18",
-    "ext-fileinfo": "*"
+    "ext-fileinfo": "*",
+    "vlucas/phpdotenv": "^5.6"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.13",
