@@ -30,7 +30,7 @@ cp .env.example .env
 ```
 Edit the .env file if necessary
 
-### 3. Database Setup
+### 4. Database Setup
 
 1) Connect to MySQL server:
 
@@ -70,7 +70,7 @@ cd path\to\your\project
 mysql -u root -p conference < database/dump.sql
 ```
 
-### 4. Start Local Server
+### 5. Start Local Server
 
 ```bash
 php -S localhost:8000 -t public
