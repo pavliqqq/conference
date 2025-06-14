@@ -9,15 +9,20 @@ var iti = window.intlTelInput(input, {
     formatOnDisplay: true,
     initialCountry: "us"
 });
+
+function generateMaskFromPlaceholder(placeholder) {
+    return placeholder.split('').map(char => {
+        if (/\d/.test(char)) return '9';
+        return char;
+    }).join('');
+}
+
 function applyMask() {
     setTimeout(() => {
-        var placeholder = iti.getNumber();
-        if (!placeholder) {
-            placeholder = input.getAttribute("placeholder");
-        }
+        var placeholder = input.getAttribute("placeholder");
         if (!placeholder) return;
 
-        var mask = placeholder.replace(/[0-9]/g, "9");
+        var mask = generateMaskFromPlaceholder(placeholder);
 
         if (window.Inputmask) {
             Inputmask.remove(input);
@@ -28,9 +33,14 @@ function applyMask() {
             placeholder: "_",
             showMaskOnHover: false,
             clearIncomplete: true,
-            autoUnmask: true
+            autoUnmask: false
         }).mask(input);
     }, 50);
+}
+
+function setDialCode() {
+    var dialCode = iti.getSelectedCountryData().dialCode;
+    input.value = "+" + dialCode;
 }
 
 var countryData = window.intlTelInputGlobals.getCountryData();
@@ -41,21 +51,22 @@ for (var i = 0; i < countryData.length; i++) {
     optionNode.textContent = country.name + " (+" + country.dialCode + ")";
     countrySelect.appendChild(optionNode);
 }
+countrySelect.value = iti.getSelectedCountryData().iso2;
 
 countrySelect.addEventListener("change", function() {
     iti.setCountry(this.value);
     applyMask();
+    setTimeout(setDialCode, 60);
 });
-
 
 input.addEventListener("countrychange", function() {
     var currentCountry = iti.getSelectedCountryData();
     countrySelect.value = currentCountry.iso2;
-    input.value = "";
     applyMask();
+    setTimeout(setDialCode, 60);
 });
-
 
 window.addEventListener("load", function() {
     applyMask();
+    setTimeout(setDialCode, 60);
 });
