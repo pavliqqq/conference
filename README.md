@@ -57,7 +57,9 @@ Get-Content .\database\dump.sql | mysql -u root -p conference
 ```
 
 If the above command didn’t work, follow these steps:
+
 5) Open your command prompt (cmd).
+
 6) Navigate to the project directory, for example:
 
 ```bash
