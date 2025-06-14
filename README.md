@@ -23,6 +23,13 @@ cd conference
 composer install
 ```
 
+### 3. Environment Setup
+
+```bash
+cp .env.example .env
+```
+Edit the .env file if necessary
+
 ### 3. Database Setup
 
 1) Connect to MySQL server:
