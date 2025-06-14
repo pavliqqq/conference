@@ -21,7 +21,7 @@ class Validator
     private const REPORT_SUBJECT_MIN = 2;
     private const REPORT_SUBJECT_MAX = 500;
 
-    private const PHONE_MIN_LENGTH = 10;
+    private const PHONE_MIN_LENGTH = 9;
     private const PHONE_MAX_LENGTH = 15;
 
     private const PHOTO_MAX_SIZE = 500 * 1024;
@@ -160,7 +160,7 @@ class Validator
         $length = strlen($digitsOnly);
 
         if ($length < self::PHONE_MIN_LENGTH || $length > self::PHONE_MAX_LENGTH) {
-            return 'Phone number must be between 10 and 15 digits';
+            return 'Phone number must be between ' . self::PHONE_MIN_LENGTH . ' and ' . self::PHONE_MAX_LENGTH . ' digits';
         }
 
         return null;
