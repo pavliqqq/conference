@@ -2,17 +2,10 @@
 
 namespace core;
 
-use app\Services\MemberService;
 use DateTime;
 
 class Validator
 {
-    private MemberService $service;
-
-    public function __construct()
-    {
-        $this->service = new MemberService();
-    }
     private const COUNTRY_CODES_PATH = __DIR__ . '/../resources/data/iso2_codes.json';
 
     private const NAME_MIN = 2;
@@ -27,7 +20,7 @@ class Validator
     private const PHOTO_MAX_SIZE = 500 * 1024;
     private const PHOTO_ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
 
-    public function validateFirstStep(array $data, ?int $excludeId = null): array
+    public function validateFirstStep(array $data): array
     {
         return array_filter([
             'first_name' => $this->validateName($data['first_name'] ?? ''),
@@ -36,7 +29,7 @@ class Validator
             'report_subject' => $this->validateReportSubject($data['report_subject'] ?? ''),
             'country' => $this->validateCountry($data['country'] ?? ''),
             'phone' => $this->validatePhoneNumber($data['phone'] ?? ''),
-            'email' => $this->validateEmail($data['email'] ?? '', $excludeId),
+            'email' => $this->validateEmail($data['email']),
         ]);
     }
 
@@ -166,7 +159,7 @@ class Validator
         return null;
     }
 
-    private function validateEmail(string $value, ?int $excludeId = null): ?string
+    private function validateEmail(string $value): ?string
     {
         $value = trim($value);
 
@@ -178,9 +171,6 @@ class Validator
             return 'Invalid email format';
         }
 
-        if (!$this->service->isEmailUnique($value, $excludeId)) {
-            return 'This email is already registered';
-        }
         return null;
     }
 
