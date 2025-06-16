@@ -73,8 +73,12 @@ class FormController
             ]);
             return;
         }
-
-        $id = $this->member->create($data);
+        if (!empty($_POST['id'])) {
+            $id = (int)$_POST['id'];
+            $this->member->updateFirstStep($data, $id);
+        } else {
+            $id = $this->member->create($data);
+        }
 
         echo json_encode(['id' => $id]);
     }
@@ -113,7 +117,7 @@ class FormController
         $data['photo'] = $fileUploader->upload($data['photo']) ?? $defaultPhotoPath;
 
 
-        $this->member->update($data, $id);
+        $this->member->updateSecondStep($data, $id);
         $count = $this->member->count();
 
         echo json_encode(['success' => true, 'count' => $count]);
