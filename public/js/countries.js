@@ -7,7 +7,6 @@ var iti = window.intlTelInput(input, {
     nationalMode: false,
     autoPlaceholder: "polite",
     formatOnDisplay: true,
-    initialCountry: "us"
 });
 
 function generateMaskFromPlaceholder(placeholder) {
@@ -32,15 +31,17 @@ function applyMask() {
             mask: mask,
             placeholder: "_",
             showMaskOnHover: false,
-            clearIncomplete: true,
+            clearIncomplete: false,
             autoUnmask: false
         }).mask(input);
     }, 50);
 }
 
 function setDialCode() {
-    var dialCode = iti.getSelectedCountryData().dialCode;
-    input.value = "+" + dialCode;
+    if(input.value === '') {
+        var dialCode = iti.getSelectedCountryData().dialCode;
+        input.value = "+" + dialCode;
+    }
 }
 
 var countryData = window.intlTelInputGlobals.getCountryData();
@@ -67,6 +68,13 @@ input.addEventListener("countrychange", function() {
 });
 
 window.addEventListener("load", function() {
+    const saved = localStorage.getItem("step1");
+    if (saved) {
+        const data = JSON.parse(saved);
+        if (data.phone && iti && typeof iti.setNumber === "function") {
+            iti.setNumber(data.phone);
+        }
+    }
     applyMask();
     setTimeout(setDialCode, 60);
 });
