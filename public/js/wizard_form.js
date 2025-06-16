@@ -1,7 +1,23 @@
 function showStep(step) {
     document.querySelectorAll(".step").forEach(s => s.classList.add("hidden"));
-    document.getElementById("step" + step).classList.remove("hidden");
+    const currentStep = document.getElementById("step" + step);
+    currentStep.classList.remove("hidden");
     localStorage.setItem("formStep", step);
+
+    if (step === "1" || step === 1 || step === "2" || step === 2) {
+        clearErrors(currentStep);
+    }
+
+    if (step === "1" || step === 1) {
+        // Показываем заголовок, прячем блок ссылок
+        document.getElementById('form_title').classList.remove("hidden");
+        document.getElementById('all-members-div').classList.add("hidden");
+
+        // Применяем маску и дату
+        applyMask();
+        birthdate();
+
+    }
 
     if (step === "3" || step === 3) {
         document.getElementById('form_title').classList.add("hidden");
@@ -28,6 +44,10 @@ async function handleStep(num, e) {
 
     if (num === 1) {
         url = "/register/first";
+        const memberId = localStorage.getItem("member_id");
+        if (memberId) {
+            formData.append("id", memberId);
+        }
         onSuccess = (json) => {
             if (json.success === false && json.errors) {
                 clearErrors(form);
@@ -153,4 +173,24 @@ function birthdate() {
 function clearErrors(form) {
     const errorElements = form.querySelectorAll('.error-message');
     errorElements.forEach(el => el.textContent = '');
+}
+
+function goToStep1() {
+    showStep(1);
+    restoreForm(1);
+}
+
+function startOver() {
+    localStorage.removeItem("formStep");
+    localStorage.removeItem("step1");
+    localStorage.removeItem("step2");
+    localStorage.removeItem("member_id");
+    localStorage.removeItem("count_members");
+
+    document.querySelectorAll("form.step").forEach(form => {
+        form.reset();
+        clearErrors(form);
+    });
+
+    showStep(1);
 }
