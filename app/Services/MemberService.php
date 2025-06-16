@@ -12,8 +12,8 @@ class MemberService
     {
         $this->member = new Member();
     }
-    public function isEmailUnique(string $email): bool
+    public function isEmailUnique(string $email, ?int $excludeId = null): bool
     {
-        return $this->member->emailCheck($email) === 0;
+        return $this->member->emailCheck($email, $excludeId) === 0;
     }
 }
