@@ -64,9 +64,7 @@ class FormController
             'email' => $_POST['email'] ?? '',
         ];
 
-        $id = !empty($_POST['id']) ? (int)$_POST['id'] : null;
-
-        $errors = $this->validator->validateFirstStep($data, $id);
+        $errors = $this->validator->validateFirstStep($data);
 
         if (!empty($errors)) {
             echo json_encode([
@@ -76,9 +74,11 @@ class FormController
             return;
         }
 
-        if (!empty($_POST['id'])) {
-            $id = (int)$_POST['id'];
-            $this->member->updateFirstStep($data, $id);
+        $existingId = $this->member->getIdByEmail($data['email']);
+
+        if ($existingId) {
+            $this->member->updateFirstStep($data, $existingId);
+            $id = $existingId;
         } else {
             $id = $this->member->create($data);
         }
