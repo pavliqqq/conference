@@ -53,10 +53,15 @@ class Member
         return (int)$row['count'];
     }
 
-    public function emailCheck(string $email): int
+    public function emailCheck(string $email, ?int $excludeId = null): int
     {
-        $sql = ("SELECT COUNT(*) FROM members WHERE email = ?");
-        $result = $this->db->query($sql, [$email]);
+        if ($excludeId !== null) {
+            $sql = "SELECT COUNT(*) FROM members WHERE email = ? AND id != ?";
+            $result = $this->db->query($sql, [$email, $excludeId]);
+        } else {
+            $sql = "SELECT COUNT(*) FROM members WHERE email = ?";
+            $result = $this->db->query($sql, [$email]);
+        }
         $count = $result->fetchColumn();
 
         return $count;
