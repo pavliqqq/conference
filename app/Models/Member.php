@@ -25,9 +25,9 @@ class Member
 
     public function updateFirstStep(array $member, int $id): bool
     {
-        $sql = "UPDATE members SET first_name = ?, last_name = ?, birthdate = ?, report_subject = ?, country = ?, phone = ?, email = ? WHERE id = ?";
+        $sql = "UPDATE members SET first_name = ?, last_name = ?, birthdate = ?, report_subject = ?, country = ?, phone = ? WHERE id = ?";
         $this->db->query($sql, [$member['first_name'], $member['last_name'], $member['birthdate'], $member['report_subject'],
-            $member['country'], $member['phone'], $member['email'], $id]);
+            $member['country'], $member['phone'], $id]);
 
         return true;
     }
@@ -53,18 +53,14 @@ class Member
         return (int)$row['count'];
     }
 
-    public function emailCheck(string $email, ?int $excludeId = null): int
+    public function getIdByEmail(string $email): ?int
     {
-        if ($excludeId !== null) {
-            $sql = "SELECT COUNT(*) FROM members WHERE email = ? AND id != ?";
-            $result = $this->db->query($sql, [$email, $excludeId]);
-        } else {
-            $sql = "SELECT COUNT(*) FROM members WHERE email = ?";
-            $result = $this->db->query($sql, [$email]);
-        }
-        $count = $result->fetchColumn();
+        $sql = "SELECT id FROM members WHERE email = ?";
+        $result = $this->db->query($sql, [$email]);
 
-        return $count;
+        $id = $result->fetchColumn();
+
+        return $id !== false ? (int)$id : null;
     }
 
     public function exists(int $id): bool
@@ -73,6 +69,6 @@ class Member
         $result = $this->db->query($sql, [$id]);
 
 
-        return (bool) $result->fetchColumn();
+        return (bool)$result->fetchColumn();
     }
 }
