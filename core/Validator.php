@@ -21,8 +21,8 @@ class Validator
     private const REPORT_SUBJECT_MIN = 2;
     private const REPORT_SUBJECT_MAX = 500;
 
-    private const PHONE_MIN_LENGTH = 9;
-    private const PHONE_MAX_LENGTH = 15;
+    private const PHONE_MIN_LENGTH = 7;
+    private const PHONE_MAX_LENGTH = 14;
 
     private const PHOTO_MAX_SIZE = 500 * 1024;
     private const PHOTO_ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
@@ -57,7 +57,7 @@ class Validator
         $value = trim($value);
 
         if ($value === '') {
-            return 'Require field';
+            return 'Required field';
         }
 
         $length = mb_strlen($value);
@@ -116,7 +116,7 @@ class Validator
         $length = mb_strlen($value);
 
         if ($value === '') {
-            return 'Require field';
+            return 'Required field';
         }
 
         if ($length < self::REPORT_SUBJECT_MIN || $length > self::REPORT_SUBJECT_MAX) {
@@ -149,7 +149,7 @@ class Validator
         $value = trim($value);
 
         if ($value === '') {
-            return 'Require field';
+            return 'Required field';
         }
 
         if (!preg_match('/^\+[\d\s\-\(\)]+$/', $value)) {
@@ -171,7 +171,7 @@ class Validator
         $value = trim($value);
 
         if ($value === '') {
-            return 'Require field';
+            return 'Required field';
         }
 
         if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
