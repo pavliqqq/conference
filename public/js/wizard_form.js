@@ -132,6 +132,16 @@ function restoreForm(step) {
             field.value = value;
         }
     }
+    if (step === 1) {
+        input.value = data.phone || "";
+
+        if (data.phone && iti && typeof iti.setNumber === "function") {
+            iti.setNumber(data.phone); // восстановит и страну, и формат
+            countrySelect.value = iti.getSelectedCountryData().iso2;
+        }
+
+        applyMask();
+    }
 }
 
 function birthdate() {
