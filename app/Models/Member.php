@@ -23,7 +23,16 @@ class Member
         return $this->db->query("SELECT LAST_INSERT_ID()")->fetchColumn();
     }
 
-    public function update(array $member, int $id): bool
+    public function updateFirstStep(array $member, int $id): bool
+    {
+        $sql = "UPDATE members SET first_name = ?, last_name = ?, birthdate = ?, report_subject = ?, country = ?, phone = ?, email = ? WHERE id = ?";
+        $this->db->query($sql, [$member['first_name'], $member['last_name'], $member['birthdate'], $member['report_subject'],
+            $member['country'], $member['phone'], $member['email'], $id]);
+
+        return true;
+    }
+
+    public function updateSecondStep(array $member, int $id): bool
     {
         $sql = "UPDATE members SET company = ?, position = ?, about_me = ?, photo = ? WHERE id = ?";
         $this->db->query($sql, [$member['company'], $member['position'], $member['about_me'], $member['photo'], $id]);
