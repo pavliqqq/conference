@@ -27,7 +27,7 @@ class Validator
     private const PHOTO_MAX_SIZE = 500 * 1024;
     private const PHOTO_ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
 
-    public function validateFirstStep(array $data): array
+    public function validateFirstStep(array $data, ?int $excludeId = null): array
     {
         return array_filter([
             'first_name' => $this->validateName($data['first_name'] ?? ''),
@@ -36,7 +36,7 @@ class Validator
             'report_subject' => $this->validateReportSubject($data['report_subject'] ?? ''),
             'country' => $this->validateCountry($data['country'] ?? ''),
             'phone' => $this->validatePhoneNumber($data['phone'] ?? ''),
-            'email' => $this->validateEmail($data['email'] ?? ''),
+            'email' => $this->validateEmail($data['email'] ?? '', $excludeId),
         ]);
     }
 
@@ -166,7 +166,7 @@ class Validator
         return null;
     }
 
-    private function validateEmail(string $value): ?string
+    private function validateEmail(string $value, ?int $excludeId = null): ?string
     {
         $value = trim($value);
 
@@ -178,7 +178,7 @@ class Validator
             return 'Invalid email format';
         }
 
-        if (!$this->service->isEmailUnique($value)) {
+        if (!$this->service->isEmailUnique($value, $excludeId)) {
             return 'This email is already registered';
         }
         return null;
