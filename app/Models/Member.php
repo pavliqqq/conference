@@ -16,9 +16,13 @@ class Member
 
     public function create(array $member): int
     {
-        $sql = "INSERT INTO members (first_name, last_name, birthdate, report_subject, country, phone, email) VALUES (?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO members (first_name, last_name, birthdate, report_subject, country, phone, email, photo) VALUES (?,?,?,?,?,?,?,?)";
+
+        $defaultPhoto = '/uploads/default_photo.png';
+
+
         $this->db->query($sql, [$member['first_name'], $member['last_name'], $member['birthdate'], $member['report_subject'],
-            $member['country'], $member['phone'], $member['email']]);
+            $member['country'], $member['phone'], $member['email'], $defaultPhoto]);
 
         return $this->db->query("SELECT LAST_INSERT_ID()")->fetchColumn();
     }
