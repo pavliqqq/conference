@@ -13,7 +13,7 @@ class FileUploader
         $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
         $fileName = uniqid('photo_', true) . '.' . $ext;
 
-        // Путь для сохранения файла
+
         $targetPath = __DIR__ . '/../../public/uploads/' . $fileName;
 
         if (move_uploaded_file($file['tmp_name'], $targetPath)) {
