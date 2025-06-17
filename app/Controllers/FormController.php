@@ -4,24 +4,36 @@ namespace app\Controllers;
 
 use app\Models\Member;
 use app\Services\FileUploader;
+use core\FirstStepRequest;
+use core\Request;
+use core\SecondStepRequest;
 use core\View;
 use core\Validator;
 
 class FormController
 {
-    private Member $member;
-    private Validator $validator;
+    private $member;
+    private $validator;
 
-    public function __construct()
+    private function getMember()
     {
-        $this->member = new Member();
-        $this->validator = new Validator();
+        if (!$this->member) {
+            $this->member = new Member();
+        }
+        return $this->member;
     }
 
+    private function getValidator()
+    {
+        if (!$this->validator) {
+            $this->validator = new Validator();
+        }
+        return $this->validator;
+    }
 
     public function wizardForm()
     {
-        $config = require __DIR__ . '/../../config/config.php';
+        $config = require __DIR__ . '/../../config/Config.php';
 
         $shareUrl = $config['app_url'] . $config['share']['path'];
         $tweetText = $config['share']['tweetText'];
@@ -35,7 +47,8 @@ class FormController
     {
         $this->check_request_method('GET');
 
-        $members = $this->member->all();
+        $member = $this->getMember();
+        $members = $member->all();
 
         $result = [];
 
@@ -54,33 +67,23 @@ class FormController
     {
         $this->check_request_method('POST');
 
-        $data = [
-            'first_name' => $_POST['first_name'] ?? '',
-            'last_name' => $_POST['last_name'] ?? '',
-            'birthdate' => $_POST['birthdate'] ?? '',
-            'report_subject' => $_POST['report_subject'] ?? '',
-            'country' => $_POST['country'] ?? '',
-            'phone' => $_POST['phone'] ?? '',
-            'email' => $_POST['email'] ?? '',
-        ];
+        $validator = $this->getValidator();
+        $member = $this->getMember();
+        $request = new FirstStepRequest();
 
-        $errors = $this->validator->validateFirstStep($data);
+        $data = $request->all();
 
-        if (!empty($errors)) {
-            echo json_encode([
-                'success' => false,
-                'errors' => $errors
-            ]);
-            return;
-        }
+        $errors = $validator->validateFirstStep($data);
 
-        $existingId = $this->member->getIdByEmail($data['email']);
+        if ($this->handleValidationErrors($errors)) return;
+
+        $existingId = $member->getIdByEmail($data['email']);
 
         if ($existingId) {
-            $this->member->updateFirstStep($data, $existingId);
+            $member->updateFirstStep($data, $existingId);
             $id = $existingId;
         } else {
-            $id = $this->member->create($data);
+            $id = $member->create($data);
         }
 
         echo json_encode(['id' => $id]);
@@ -90,38 +93,31 @@ class FormController
     {
         $this->check_request_method('POST');
 
+        $validator = $this->getValidator();
+        $member = $this->getMember();
+        $request = new SecondStepRequest();
+
+        $data = $request->all();
+
         $defaultPhotoPath = '/uploads/default_photo.png';
 
         $id = (int)$_POST['id'] ?? 0;
 
-        if (!$this->member->exists($id)) {
+        if (!$member->exists($id)) {
             echo json_encode(['success' => false, 'error' => 'Invalid member ID']);
             return;
         }
 
-        $data = [
-            'company' => $_POST['company'] ?? '',
-            'position' => $_POST['position'] ?? '',
-            'about_me' => $_POST['about_me'] ?? '',
-            'photo' => $_FILES['photo'] ?? null
-        ];
+        $errors = $validator->validateSecondStep($data);
 
-        $errors = $this->validator->validateSecondStep($data);
-
-        if (!empty($errors)) {
-            echo json_encode([
-                'success' => false,
-                'errors' => $errors
-            ]);
-            return;
-        }
+        if ($this->handleValidationErrors($errors)) return;
 
         $fileUploader = new FileUploader();
         $data['photo'] = $fileUploader->upload($data['photo']) ?? $defaultPhotoPath;
 
 
-        $this->member->updateSecondStep($data, $id);
-        $count = $this->member->count();
+        $member->updateSecondStep($data, $id);
+        $count = $member->count();
 
         echo json_encode(['success' => true, 'count' => $count]);
     }
@@ -135,4 +131,15 @@ class FormController
         }
     }
 
+    private function handleValidationErrors(array $errors): bool
+    {
+        if (!empty($errors)) {
+            echo json_encode([
+                'success' => false,
+                'errors' => $errors
+            ]);
+            return true;
+        }
+        return false;
+    }
 }
