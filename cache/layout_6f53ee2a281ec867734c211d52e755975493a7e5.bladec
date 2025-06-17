@@ -3,12 +3,13 @@
 <head>
  <meta charset="UTF-8">
  <title>Wizard Form</title>
+ <?php echo  $this->CompileStackFinal('head'); ?>
  <script src="https://cdn.tailwindcss.com"></script>
- <?php echo $this->yieldContent('head'); ?>
 </head>
 <body class="bg-gray-100">
- <div>
+<div>
  <?php echo $this->yieldContent('content'); ?>
- </div>
+</div>
+<?php echo  $this->CompileStackFinal('scripts'); ?>
 </body>
 </html>
