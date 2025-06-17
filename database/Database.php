@@ -11,7 +11,7 @@ class Database
     private PDO $conn;
     public function __construct()
     {
-        $config = require __DIR__ . '/../config/config.php';
+        $config = require __DIR__ . '/../config/Config.php';
 
         $db = $config['db'];
 
