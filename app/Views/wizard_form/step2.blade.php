@@ -1,4 +1,4 @@
-<form id="step2" class="step hidden" onsubmit="handleStep(2,event)" enctype="multipart/form-data">
+<form id="step2" class="step hidden" onsubmit="WizardForm.handleStep(2,event)" enctype="multipart/form-data">
     <div class="space-y-4 mb-4">
         <div class="flex flex-col">
             <input name="company" type="text" placeholder="Company" class="border p-2 rounded w-full"/>
@@ -22,7 +22,7 @@
     </div>
 
     <div class="flex justify-between pt-2">
-        <button type="button" onclick="goToStep1()"
+        <button type="button" onclick="WizardForm.goToStep1()"
                 class="bg-gray-300 hover:bg-gray-400 text-black px-6 py-2 rounded transition-colors duration-200">
             Back
         </button>

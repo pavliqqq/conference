@@ -15,7 +15,7 @@
 </div>
 
 <div class="flex justify-between items-center mt-6 hidden" id="all-members-div">
-    <button type="button" onclick="startOver()"
+    <button type="button" onclick="WizardForm.startOver()"
             class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded transition-colors duration-200">
         Start over
     </button>

@@ -1,4 +1,4 @@
-<form id="step1" class="step space-y-4" onsubmit="handleStep(1, event)">
+<form id="step1" class="step space-y-4" onsubmit="WizardForm.handleStep(1,event)">
 
     <div class="flex flex-col">
         <input name="first_name" type="text" placeholder="First Name" class="border p-2 rounded w-full" />
