@@ -3,12 +3,11 @@
 namespace app\Controllers;
 
 use app\Models\Member;
-use app\Services\FileUploader;
-use core\FirstStepRequest;
-use core\Request;
-use core\SecondStepRequest;
+use core\Requests\FirstStepRequest;
+use core\Requests\SecondStepRequest;
 use core\View;
-use core\Validator;
+use services\FileUploader;
+use services\Validator;
 
 class FormController
 {
@@ -33,7 +32,7 @@ class FormController
 
     public function wizardForm()
     {
-        $config = require __DIR__ . '/../../config/Config.php';
+        $config = require __DIR__ . '/../../config.php';
 
         $shareUrl = $config['app_url'] . $config['share']['path'];
         $tweetText = $config['share']['tweetText'];
@@ -80,7 +79,7 @@ class FormController
         $existingId = $member->getIdByEmail($data['email']);
 
         if ($existingId) {
-            $member->updateFirstStep($data, $existingId);
+            $member->update($data, $existingId);
             $id = $existingId;
         } else {
             $id = $member->create($data);
@@ -116,7 +115,7 @@ class FormController
         $data['photo'] = $fileUploader->upload($data['photo']) ?? $defaultPhotoPath;
 
 
-        $member->updateSecondStep($data, $id);
+        $member->update($data, $id);
         $count = $member->count();
 
         echo json_encode(['success' => true, 'count' => $count]);
