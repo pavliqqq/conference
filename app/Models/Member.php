@@ -16,30 +16,39 @@ class Member
 
     public function create(array $member): int
     {
-        $sql = "INSERT INTO members (first_name, last_name, birthdate, report_subject, country, phone, email, photo) VALUES (?,?,?,?,?,?,?,?)";
+        $columns = array_keys($member);
+        
+        $member['photo'] = '/uploads/default_photo.png';
 
-        $defaultPhoto = '/uploads/default_photo.png';
+        $sql = sprintf('INSERT INTO members (%s) VALUES (%s)',
+            implode(', ', $columns),
+            ':' . implode(', :', $columns));
 
+        $params = [];
+        foreach ($member as $key => $value) {
+            $params[":$key"] = $value;
+        }
 
-        $this->db->query($sql, [$member['first_name'], $member['last_name'], $member['birthdate'], $member['report_subject'],
-            $member['country'], $member['phone'], $member['email'], $defaultPhoto]);
+        $this->db->query($sql, $params);
 
         return $this->db->query("SELECT LAST_INSERT_ID()")->fetchColumn();
     }
 
-    public function updateFirstStep(array $member, int $id): bool
+    public function update(array $member, int $id): bool
     {
-        $sql = "UPDATE members SET first_name = ?, last_name = ?, birthdate = ?, report_subject = ?, country = ?, phone = ? WHERE id = ?";
-        $this->db->query($sql, [$member['first_name'], $member['last_name'], $member['birthdate'], $member['report_subject'],
-            $member['country'], $member['phone'], $id]);
+        $columns = array_keys($member);
 
-        return true;
-    }
+        $sql = sprintf('UPDATE members SET %s WHERE id = :id',
+            implode(', ', array_map(fn($col) => "$col = :$col", $columns)));
 
-    public function updateSecondStep(array $member, int $id): bool
-    {
-        $sql = "UPDATE members SET company = ?, position = ?, about_me = ?, photo = ? WHERE id = ?";
-        $this->db->query($sql, [$member['company'], $member['position'], $member['about_me'], $member['photo'], $id]);
+        $params = [];
+        foreach($member as $key => $value){
+            $params[":$key"] = $value;
+        }
+
+        $params[':id'] = $id;
+
+        $this->db->query($sql, $params);
 
         return true;
     }
