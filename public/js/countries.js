@@ -1,80 +1,105 @@
-var input = document.querySelector("#phone");
-var countrySelect = document.querySelector("#countrySelect");
+const PhoneCountryControl = {
+    input: null,
+    countrySelect: null,
+    iti: null,
 
-var iti = window.intlTelInput(input, {
-    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-    allowDropdown: false,
-    nationalMode: false,
-    autoPlaceholder: "polite",
-    formatOnDisplay: true,
-});
+    init() {
+        this.input = document.querySelector("#phone");
+        this.countrySelect = document.querySelector("#countrySelect");
 
-function generateMaskFromPlaceholder(placeholder) {
-    return placeholder.split('').map(char => {
-        if (/\d/.test(char)) return '9';
-        return char;
-    }).join('');
-}
+        this.iti = window.intlTelInput(this.input, {
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            allowDropdown: false,
+            nationalMode: false,
+            autoPlaceholder: "polite",
+            formatOnDisplay: true,
+        });
 
-function applyMask() {
-    setTimeout(() => {
-        var placeholder = input.getAttribute("placeholder");
-        if (!placeholder) return;
+        this.populateCountries();
+        this.setInitialCountry();
+        this.bindEvents();
 
-        var mask = generateMaskFromPlaceholder(placeholder);
+        window.addEventListener("load", () => {
+            this.restoreFromStorage();
+            this.applyMask();
+            setTimeout(() => this.setDialCode(), 60);
+        });
+    },
 
-        if (window.Inputmask) {
-            Inputmask.remove(input);
+    generateMaskFromPlaceholder(placeholder) {
+        return placeholder.split('').map(char => (/\d/.test(char) ? '9' : char)).join('');
+    },
+
+    applyMask() {
+        setTimeout(() => {
+            const placeholder = this.input.getAttribute("placeholder");
+            if (!placeholder) return;
+
+            const mask = this.generateMaskFromPlaceholder(placeholder);
+
+            if (window.Inputmask) {
+                Inputmask.remove(this.input);
+            }
+
+            Inputmask({
+                mask: mask,
+                placeholder: "_",
+                showMaskOnHover: false,
+                clearIncomplete: false,
+                autoUnmask: false
+            }).mask(this.input);
+        }, 50);
+    },
+
+    setDialCode() {
+        if (this.input.value === '') {
+            const dialCode = this.iti.getSelectedCountryData().dialCode;
+            this.input.value = "+" + dialCode;
         }
+    },
 
-        Inputmask({
-            mask: mask,
-            placeholder: "_",
-            showMaskOnHover: false,
-            clearIncomplete: false,
-            autoUnmask: false
-        }).mask(input);
-    }, 50);
-}
+    populateCountries() {
+        const countryData = window.intlTelInputGlobals.getCountryData();
+        for (let i = 0; i < countryData.length; i++) {
+            const country = countryData[i];
+            const optionNode = document.createElement("option");
+            optionNode.value = country.iso2;
+            optionNode.textContent = country.name + " (+" + country.dialCode + ")";
+            this.countrySelect.appendChild(optionNode);
+        }
+    },
 
-function setDialCode() {
-    if(input.value === '') {
-        var dialCode = iti.getSelectedCountryData().dialCode;
-        input.value = "+" + dialCode;
-    }
-}
+    setInitialCountry() {
+        const selectedCountry = this.iti.getSelectedCountryData();
+        this.countrySelect.value = selectedCountry.iso2;
+    },
 
-var countryData = window.intlTelInputGlobals.getCountryData();
-for (var i = 0; i < countryData.length; i++) {
-    var country = countryData[i];
-    var optionNode = document.createElement("option");
-    optionNode.value = country.iso2;
-    optionNode.textContent = country.name + " (+" + country.dialCode + ")";
-    countrySelect.appendChild(optionNode);
-}
-countrySelect.value = iti.getSelectedCountryData().iso2;
+    bindEvents() {
+        this.countrySelect.addEventListener("change", () => {
+            this.iti.setCountry(this.countrySelect.value);
+            this.applyMask();
+            setTimeout(() => this.setDialCode(), 60);
+        });
 
-countrySelect.addEventListener("change", function() {
-    iti.setCountry(this.value);
-    applyMask();
-    setTimeout(setDialCode, 60);
-});
+        this.input.addEventListener("countrychange", () => {
+            const currentCountry = this.iti.getSelectedCountryData();
+            this.countrySelect.value = currentCountry.iso2;
+            this.applyMask();
+            setTimeout(() => this.setDialCode(), 60);
+        });
+    },
 
-input.addEventListener("countrychange", function() {
-    var currentCountry = iti.getSelectedCountryData();
-    countrySelect.value = currentCountry.iso2;
-    applyMask();
-    setTimeout(setDialCode, 60);
-});
-
-window.addEventListener("load", function() {
-    const saved = localStorage.getItem("step1");
-    if (saved) {
-        const data = JSON.parse(saved);
-        if (data.phone && iti && typeof iti.setNumber === "function") {
-            iti.setNumber(data.phone);
+    restoreFromStorage() {
+        const saved = localStorage.getItem("step1");
+        if (saved) {
+            const data = JSON.parse(saved);
+            if (data.phone && typeof this.iti.setNumber === "function") {
+                this.iti.setNumber(data.phone);
+            }
         }
     }
-    applyMask();
-    setTimeout(setDialCode, 60);
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    PhoneCountryControl.init();
 });
