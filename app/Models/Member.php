@@ -16,9 +16,9 @@ class Member
 
     public function create(array $member): int
     {
-        $columns = array_keys($member);
-        
         $member['photo'] = '/uploads/default_photo.png';
+
+        $columns = array_keys($member);
 
         $sql = sprintf('INSERT INTO members (%s) VALUES (%s)',
             implode(', ', $columns),
