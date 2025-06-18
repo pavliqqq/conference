@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Services;
+namespace services;
 
 class FileUploader
 {
@@ -14,7 +14,7 @@ class FileUploader
         $fileName = uniqid('photo_', true) . '.' . $ext;
 
 
-        $targetPath = __DIR__ . '/../../public/uploads/' . $fileName;
+        $targetPath = __DIR__ . '/../public/uploads/' . $fileName;
 
         if (move_uploaded_file($file['tmp_name'], $targetPath)) {
             return '/uploads/' . $fileName;
