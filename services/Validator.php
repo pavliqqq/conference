@@ -1,6 +1,6 @@
 <?php
 
-namespace core;
+namespace services;
 
 use DateTime;
 
@@ -42,8 +42,6 @@ class Validator
             'photo' => $this->validatePhoto($data['photo'] ?? null),
         ]);
     }
-
-
 
     private function validateName(string $value): ?string
     {
